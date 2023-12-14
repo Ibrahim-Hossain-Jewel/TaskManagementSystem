@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios';
 import {withRouter} from 'react-router'
 
-import {  Col, FormControl, FormGroup, Button, Checkbox } from 'react-bootstrap'
+import {  Col, FormControl, FormGroup, Button, Checkbox, Modal } from 'react-bootstrap'
  class SignIn extends React.Component{
 	constructor(props){
 		super(props);
@@ -13,6 +13,8 @@ import {  Col, FormControl, FormGroup, Button, Checkbox } from 'react-bootstrap'
 		        email: '',
 		        password: '',
 		    },
+			showError: false,
+			message: 'Unauthorized !'
 		}
 	}
 
@@ -26,6 +28,7 @@ import {  Col, FormControl, FormGroup, Button, Checkbox } from 'react-bootstrap'
 	onSubmit = (evt) => {
 	  evt.preventDefault();
 	  console.log("Hit are comming from user", this.state.form);
+	  let self = this;
 	  axios.post(`http://localhost:3003/api/login`, this.state.form)
   		.then(res => {
   			sessionStorage.setItem('token',res.data.token);
@@ -33,12 +36,16 @@ import {  Col, FormControl, FormGroup, Button, Checkbox } from 'react-bootstrap'
 			})
 
 	  .catch(function (error) {
-	    console.log(error);
+		self.setState({showError: true});
+	    console.log(error.message);
 	  });
     }
-
+	signUp = () => {
+    	this.props.history.push('/Signup')
+    }
 	render(){
 		console.log(this.state.form);
+		let close = () => this.setState({ showError: false });
 		return(
 			<Col sm={4} smOffset={4} style={{marginTop:'140px'}}>
 				<Col>
@@ -56,6 +63,22 @@ import {  Col, FormControl, FormGroup, Button, Checkbox } from 'react-bootstrap'
 				      <Link className="pull-right" to="/Signup">signup ?</Link>
 				      </Col>
 				    </FormGroup>
+					<Modal
+				      bsSize="small"
+			          show={this.state.showError}
+			          onHide={close}
+			          container={this}
+			          aria-labelledby="contained-modal-title"
+			        >
+			          <Modal.Header closeButton>
+			          </Modal.Header>
+			          <Modal.Body >
+			          		<p style={{textAlign:'center'}}><b>{this.state.message}</b></p>
+			          </Modal.Body>
+			          <Modal.Footer>
+			            <Button block bsStyle="primary" onClick={this.signUp}>Signup</Button>
+			          </Modal.Footer>
+			        </Modal>
 				    <FormGroup>
 				      <Button bsStyle="primary" style={{width:'100%', height:'40px',marginBottom:'10px'}} onClick={this.onSubmit} type="submit">submit</Button>
 				    </FormGroup>
