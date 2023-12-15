@@ -85,15 +85,13 @@ router.route('/register').post(async(req, res) => {
 	})
 		
 	router.route('/note/add')
-	.post(function(req, res) {
-        var note = new Notes(req.body)
-        note.save(function (err) {
-        	if (err) {
-        		return res.status(500).end()
-        	} else {
-        		return res.status(200).json({msg: 'note added'})	
-        	}	
-        })
+	.post(async(req, res)=>{
+		try{
+			const responseRequest = await Notes.create(req.body);
+			return res.status(200).json({msg: responseRequest})
+		}catch(error){
+			return res.status(500).end();
+		}
  	});
 
  router.route('/note/update/:id')

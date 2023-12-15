@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 		super(props);
 		this.state={
 			form: {
-		        email: '',
+		        email: 'ibraimhossaincse@gmail.com',
 		        title: '',
             description: '',
             dueDate: '',
@@ -43,10 +43,9 @@ import { Link } from 'react-router-dom';
 	  evt.preventDefault();
 	  console.log("Hit create task", this.state.form);
 	  let self = this;
-	  axios.post(`http://localhost:3003/api/login`, this.state.form)
+	  axios.post(`http://localhost:3003/api/note/add`, this.state.form)
   		.then(res => {
-  			sessionStorage.setItem('token',res.data.token);
-				this.props.history.push('/');
+        console.log("res................", res);
 			})
 
 	  .catch(function (error) {
@@ -136,9 +135,6 @@ import { Link } from 'react-router-dom';
                     <Modal.Body >
                         <p style={{textAlign:'center'}}><b>{this.state.message}</b></p>
                     </Modal.Body>
-                    <Modal.Footer>
-                      <Button block bsStyle="primary" onClick={this.signUp}>Signup</Button>
-                    </Modal.Footer>
                   </Modal>
                 <FormGroup>
                   <Button bsStyle="primary" style={{width:'100%', height:'40px',marginBottom:'10px'}} onClick={this.onSubmit} type="submit">Create</Button>
