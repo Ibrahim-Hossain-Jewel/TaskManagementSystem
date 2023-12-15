@@ -3,6 +3,7 @@ import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import axios from 'axios';
+import jwt_decode from "jwt-decode";
 import { Nav, NavItem, Navbar, Col, FormControl, FormGroup, Button, Checkbox, Modal, ControlLabel} from 'react-bootstrap';
 import {
   increment,
@@ -17,7 +18,7 @@ import { Link } from 'react-router-dom';
 		super(props);
 		this.state={
 			form: {
-		        email: 'ibraimhossaincse@gmail.com',
+		        email: '',
 		        title: '',
             description: '',
             dueDate: '',
@@ -42,10 +43,24 @@ import { Link } from 'react-router-dom';
   onSubmit = (evt) => {
 	  evt.preventDefault();
 	  console.log("Hit create task", this.state.form);
+    //web token
+    let token = sessionStorage.getItem('token');
+    const decoded = jwt_decode(token);
+    console.log(decoded);
+    console.log("decoded web token", decoded.clientEmail);
+    const decodedEmail = decoded.clientEmail;
+    this.state.form.email = decodedEmail;
 	  let self = this;
+    console.log("checking data", this.state.form);
 	  axios.post(`http://localhost:3003/api/note/add`, this.state.form)
   		.then(res => {
         self.setState({show: true});
+        // this.state.form.email = '';
+        // this.state.form.title = '';
+        // this.state.form.description = '';
+        // this.state.form.dueDate = '';
+        // this.state.form.priorityLevel = '';
+        // this.state.form.category = '';
 			})
 
 	  .catch(function (error) {
