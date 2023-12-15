@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom';
             priorityLevel: '',
             category: ''
 		    },
-			showError: false,
+			show: false,
 			message: 'Successfully created !'
 		}
 	}
@@ -45,17 +45,17 @@ import { Link } from 'react-router-dom';
 	  let self = this;
 	  axios.post(`http://localhost:3003/api/note/add`, this.state.form)
   		.then(res => {
-        console.log("res................", res);
+        self.setState({show: true});
 			})
 
 	  .catch(function (error) {
-		self.setState({showError: true});
+		self.setState({show: true, message: 'Failed to create task'});
 	    console.log(error.message);
 	  });
     }
     
   render(){
-    let close = () => this.setState({ showError: false });
+    let close = () => this.setState({ show: false });
     return(
         <div className='container' style={{marginTop: "10px"}}>
           <Navbar collapseOnSelect>
@@ -125,7 +125,7 @@ import { Link } from 'react-router-dom';
 
               <Modal
                   bsSize="small"
-                    show={this.state.showError}
+                    show={this.state.show}
                     onHide={close}
                     container={this}
                     aria-labelledby="contained-modal-title"
