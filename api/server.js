@@ -94,46 +94,6 @@ router.route('/register').post(async(req, res) => {
 		}
  	});
 
- router.route('/note/update/:id')
- 	.put(function(req, res){
-		Notes.update({_id: req.params.id}, {$set: {title : req.body.title, description : req.body.description}}).exec((err, note) => {
-		if (err) {
-			console.log(err)
-			return res.status(501).json({
-				message: err
-			})
-		} else {
-			return res.status(200).json({msg: 'note updated'})
-		}
-		})
- 	})	
-
- router.route('/note/delete/:id')
- 	.delete(function(req, res){
-		Notes.remove({_id: req.params.id}).exec((err, note) => {
-		if (err) {
-			console.log(err)
-			return res.status(501).json({
-				message: err
-			})
-		} else {
-			return res.status(200).json({msg: 'note removed'})
-		}
-		})
- 	})
- router.route('/note/list')
- 	.get(function(req, res){
-  Notes.find({}).exec(function (err, note) {
-    if (err) {
-      return res.status(401).json({
-        message: err
-      })
-    } else {
-      return res.json(note)
-    }
-  })
-})
-
 
 router.use(function(req,res,next){
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
